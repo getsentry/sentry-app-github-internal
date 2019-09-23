@@ -1,5 +1,6 @@
 const Koa = require("koa");
 const Router = require("koa-router");
+const serve = require('koa-static');
 
 const app = new Koa();
 const router = new Router();
@@ -8,7 +9,9 @@ const PROJECT_TO_REPO = new Map([
   ['relay', 'semaphore'],
 ]);
 
+try {
 
+  console.log('starting');
 router.get("/stacktrace/:service/:org/:repo", (ctx, next) => {
   const { params, request } = ctx;
   const { org, repo: repoFromParams, service } = params;
@@ -45,9 +48,9 @@ router.get("/stacktrace/:service/:org/:repo", (ctx, next) => {
   }
 });
 
-router.get("/", (ctx, next) => {
-  ctx.body = "Visit <a href=\"https://github.com/getsentry/sentry-app-github-internal\">https://github.com/getsentry/sentry-app-github-internal</a> to update";
-});
+// router.get("/", (ctx, next) => {
+  // ctx.body = "Visit <a href=\"https://github.com/getsentry/sentry-app-github-internal\">https://github.com/getsentry/sentry-app-github-internal</a> to update";
+// });
 
 /**
  * Checks if source code belongs to getsentry repo, current only detects getsentry javascript
@@ -70,7 +73,7 @@ function getRepo(project, filename) {
     return PROJECT_TO_REPO.get(project);
   }
 
-  if (isGetSentry(fileName)) {
+  if (isGetSentry(filename)) {
     return 'getsentry';
   }
 
@@ -79,5 +82,9 @@ function getRepo(project, filename) {
 }
 
 app.use(router.routes()).use(router.allowedMethods());
-app.listen();
+app.use(serve('./public'));
+app.listen(3000);
+} catch (err) {
+  console.error(err);
+}
 module.exports = app.callback();
