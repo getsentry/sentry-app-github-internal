@@ -1,0 +1,16 @@
+{
+  "name": "sentry-app-github-internal",
+  "version": "1.0.0",
+  "description": "Simple internal Sentry App to link stacktraces to GitHub",
+  "main": "index.js",
+  "scripts": {
+    "start": "nodemon index.js localhost 8080"
+  },
+  "dependencies": {
+    "koa": "2.7.0",
+    "koa-router": "7.4.0"
+  },
+  "devDependencies": {
+    "nodemon": "1.18.4"
+  }
+}
